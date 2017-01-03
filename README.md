@@ -26,6 +26,7 @@ compwhile is written with extensibility in mind - the plugins system allows you 
 **Dor Savion** &lt;dorsav@gmail.com&gt;
 * [elizehavi](https://github.com/elizehavi) -
 **Eli Zehavi** &lt;eli.zehavi@gmail.com&gt;
+
 ### Inspired by
 
 [Computability and Complexity from a Programming Perspective](http://www.diku.dk/~neil/Comp2book.html) (1997) by Neil Jones.
