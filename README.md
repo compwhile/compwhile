@@ -10,15 +10,16 @@ The compwhile core library is wrapped inside a web application to create a power
 * Build an AST of your program.
 * Run your program.
 * Solve programming exercises with immediate feedback.
+* Visualize your input and output of trees.
 
 ### Want to contribute?
 compwhile is written with extensibility in mind - the plugins system allows you to add support for new languages easily. Our goal is to support the following features:
 
 * Edit and run WHILE programs.
-* Edit and run GOTO programs
-* Edit and run F/F+ programs
-* Debugger
-* Time complexity calculation
+* Edit and run GOTO programs.
+* Edit and run F/F+ programs.
+* Debugger.
+* Time complexity calculation.
 
 ### Project Team Members
 * [HagaiNuriel](https://github.com/HagaiNuriel) -
