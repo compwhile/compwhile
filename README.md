@@ -14,6 +14,7 @@ The compwhile core library is wrapped inside a web application to create a power
 ### Want to contribute?
 compwhile is written with extensibility in mind - the plugins system allows you to add support for new languages easily. Our goal is to support the following features:
 
+* Edit and run WHILE programs.
 * Edit and run GOTO programs
 * Edit and run F/F+ programs
 * Debugger
