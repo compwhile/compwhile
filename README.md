@@ -4,7 +4,7 @@ compwhile is an open source project to enhance and level up your study of progra
 
 The compwhile core library is wrapped inside a web application to create a powerful web IDE for editing and running computer programs written in WHILE and other languages presented in the book "Computability and Complexity: From a Programming Perspective" (1997), by Neil Jones.
 
-### Features[[][][]
+### Features
 * Edit your programs within a web IDE - no installation required.
 * Syntax highlighting and error checking.
 * Build an AST of your program.
@@ -14,11 +14,11 @@ The compwhile core library is wrapped inside a web application to create a power
 
 ### Releases
 
-compwhile will follow Semantic Versioning 2.0.0 standard.[[
+compwhile will follow [Semantic Versioning 2.0.0 standard](http://semver.org).
 
 We plan to deliver our first release, v0.1.0, by the end June 2017.
 
-Current status of features that will be implemented in v0.1.0:
+Current list of features that will be implemented in v0.1.0:
 * Code editing
 * Syntax highlighting and error checking of a WHILE program.
 * AST Visualization of a WHILE program.
