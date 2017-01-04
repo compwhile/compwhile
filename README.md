@@ -2,7 +2,7 @@
 
 compwhile is an open source project to enhance and level up your study of programming languages in Computability Theory course.
 
-The compwhile core library is wrapped inside a web application to create a powerful web IDE for editing and running computer programs written in WHILE and other languages presented in the book "Computability and Complexity: From a Programming Perspective" (1997), by Neil Jones.
+The compwhile core library is wrapped inside a web application to create a powerful web IDE for editing and running computer programs written in WHILE and other languages presented in the book [Computability and Complexity from a Programming Perspective](http://www.diku.dk/~neil/Comp2book.html) (1997) by Neil Jones.
 
 ### Features
 * Edit your programs within a web IDE - no installation required.
@@ -16,7 +16,7 @@ The compwhile core library is wrapped inside a web application to create a power
 
 compwhile will follow [Semantic Versioning 2.0.0 standard](http://semver.org).
 
-We plan to deliver our first release, v0.1.0, by the end June 2017.
+We plan to deliver our first release, v0.1.0, by the end of June 2017.
 
 Current list of features that will be implemented in v0.1.0:
 * Code editing
