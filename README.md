@@ -1,5 +1,6 @@
-# compwhile
+![alt text](https://github.com/compwhile/compwhile/raw/master/logo.png "compwhile")
 
+# compwhile
 compwhile is an open source project to enhance and level up your study of programming languages in Computability Theory course.
 
 The compwhile core library is wrapped inside a web application to create a powerful web IDE for editing and running computer programs written in WHILE and other languages presented in the book [Computability and Complexity from a Programming Perspective](http://www.diku.dk/~neil/Comp2book.html) (1997) by Neil Jones.
@@ -59,3 +60,5 @@ The project has the following repositories:
 
 ### License
 MIT
+
+[logo]: ./logo-big.png "compwhile
