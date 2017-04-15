@@ -1,4 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
+
 const gulp = require('gulp');
 const mocha = require('gulp-mocha');
 const injectModules = require('gulp-inject-modules');
@@ -68,8 +69,8 @@ gulp.task('test', () => (
 
 gulp.task('dev-test', () => (
     gulp.src(files)
-        .pipe(babel())
-        .pipe(injectModules())
+        .pipe(babel({ ignore: './while.js' }))
+        // .pipe(injectModules())
         .pipe(filter('src/**/*.spec.js'))
         .pipe(mocha({
           reporter: 'spec',

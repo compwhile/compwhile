@@ -37,6 +37,10 @@
     "gulp-inject-modules": "^1.0.0",
     "gulp-mocha": "^4.3.0",
     "gulp-sourcemaps": "^2.5.1",
-    "mochawesome": "^2.0.4"
+    "mochawesome": "^2.0.4",
+    "webpack": "^2.4.1"
+  },
+  "dependencies": {
+    "chevrotain": "^0.27.3"
   }
 }

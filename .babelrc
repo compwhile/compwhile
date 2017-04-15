@@ -2,5 +2,8 @@
   "presets": [
     "node6",
     "es2017"
+  ],
+  "ignore": [
+    "./while.js"
   ]
 }

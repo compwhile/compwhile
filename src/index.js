@@ -1,3 +1,4 @@
-import tokenizer from './tokenizer';
+import lexer from './lexer';
+import parser from './parser';
 
-export default { tokenizer };
+export default { lexer, parser };
