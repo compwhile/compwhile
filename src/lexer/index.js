@@ -37,11 +37,11 @@ const Write = createToken({ name: 'Write', pattern: /write/, parent: Keyword });
 const Hd = createToken({ name: 'Hd', pattern: /hd/, parent: Keyword });
 const Tl = createToken({ name: 'Tl', pattern: /tl/, parent: Keyword });
 const Cons = createToken({ name: 'Cons', pattern: /cons/, parent: Keyword });
-const While = createToken({ name: 'While', pattern: /while/, parnet: Keyword });
-const Do = createToken({ name: 'Do', pattern: /do/, parnet: Keyword });
-const If = createToken({ name: 'If', pattern: /if/, parnet: Keyword });
-const Then = createToken({ name: 'Then', pattern: /then/, parnet: Keyword });
-const Else = createToken({ name: 'Else', pattern: /else/, parnet: Keyword });
+const While = createToken({ name: 'While', pattern: /while/, parent: Keyword });
+const Do = createToken({ name: 'Do', pattern: /do/, parent: Keyword });
+const If = createToken({ name: 'If', pattern: /if/, parent: Keyword });
+const Then = createToken({ name: 'Then', pattern: /then/, parent: Keyword });
+const Else = createToken({ name: 'Else', pattern: /else/, parent: Keyword });
 
 const tokens = [
   Whitespace, Semicolon, // very common, placing it first speeds up the lexing
