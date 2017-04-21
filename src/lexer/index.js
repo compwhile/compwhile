@@ -1,14 +1,32 @@
 import chevrotain from 'chevrotain';
+import patterns from './pattern-matchers';
 
+debugger;
 const createToken = chevrotain.createToken;
+const context = { indentStack: [0] };
 
-const Whitespace = createToken({
-  name: 'Whitespace',
-  pattern: /\s+/,
-  group: chevrotain.Lexer.SKIPPED,
-});
+// newlines are not skipped, by setting their group to "nl" they are saved in the lexer result
+// and thus we can check before creating an indentation token that the last token
+// matched was a newline.
+const Newline = createToken({ name: 'Newline', pattern: /\n\r|\n|\r/, group: 'nl' });
+const Spaces = createToken({ name: 'Spaces', pattern: / +/, group: chevrotain.Lexer.SKIPPED });
+
+const matchIndent = (...args) => (patterns.matchIndent.call(context, ...args));
+const matchOutdent = (...args) => (patterns.matchOutdent.call(context, ...args));
+
+// define the indentation tokens using custom token patterns
+const Indent = createToken({ name: 'Indent', pattern: matchIndent });
+const Outdent = createToken({ name: 'Outdent', pattern: matchOutdent });
+
+// const Whitespace = createToken({
+  // name: 'Whitespace',
+  // pattern: /\s+/,
+  // // pattern: /[\r\n\t\f\v]*/,
+  // group: chevrotain.Lexer.SKIPPED,
+// });
+//
 const Identifier = createToken({ name: 'Identifier', pattern: /\w+/ });
-const Integer = createToken({ name: 'Integer', pattern: /0|[1-9]\d+/ });
+const Integer = createToken({ name: 'Integer', pattern: /\d+/ });
 const Assign = createToken({ name: 'Assign', pattern: /:=/ });
 const Semicolon = createToken({ name: 'Semicolon', pattern: /;/ });
 const LParen = createToken({ name: 'LParen', pattern: /\(/ });
@@ -43,31 +61,49 @@ const If = createToken({ name: 'If', pattern: /if/, parent: Keyword });
 const Then = createToken({ name: 'Then', pattern: /then/, parent: Keyword });
 const Else = createToken({ name: 'Else', pattern: /else/, parent: Keyword });
 
-const tokens = [
-  Whitespace, Semicolon, // very common, placing it first speeds up the lexing
-  Integer, Literal, Assign, LParen, RParen,
+const tokensArray = [
+  Newline,
+
+  // indentation tokens must appear before Spaces, otherwise all
+  // indentation will always be consumed as spaces.
+  // Outdent must appear before Indent for handling zero spaces outdents.
+  Outdent,
+  Indent,
+  Spaces,
+  Integer,
+  Literal,
+  Semicolon,
+  LParen, RParen,
+  Assign,
   Keyword, Read, Write, Hd, Tl, Cons, // keywords
   While, Do, If, Then, Else, Comment,
   Identifier, // identifier must appear after ALL keyword tokens
 ];
-const whileLexer = new chevrotain.Lexer(tokens);
+const whileLexer = new chevrotain.Lexer(tokensArray);
+
 
 function tokenize(text) {
-  const lexResult = whileLexer.tokenize(text);
+  context.identStack = [0];
+  context.lastTextMatched = undefined;
 
-  if (lexResult.errors.length > 0) {
-    throw new Error(lexResult.errors);
-  }
+  const lexResult = whileLexer.tokenize(text);
 
   return lexResult;
 }
 
-const tokenTypesArray = tokens.map(token =>
+const tokenTypesArray = tokensArray.map(token =>
   ({ key: token.tokenName, value: token.tokenType }));
 const tokenTypes = tokenTypesArray.reduce((acc, token) => {
   acc[token.key] = token.value;
 
   return acc;
 }, {});
+const tokensKeyValueArray = tokensArray.map(token =>
+  ({ key: token.tokenName, value: token }));
+const tokens = tokensKeyValueArray.reduce((acc, token) => {
+  acc[token.key] = token.value;
 
-export default { tokenize, tokenTypes };
+  return acc;
+}, {});
+
+export default { tokenize, tokenTypes, tokens, tokensArray };
