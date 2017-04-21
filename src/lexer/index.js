@@ -1,30 +1,8 @@
 import chevrotain from 'chevrotain';
-import patterns from './pattern-matchers';
+import indent from './indent';
 
-debugger;
 const createToken = chevrotain.createToken;
-const context = { indentStack: [0] };
 
-// newlines are not skipped, by setting their group to "nl" they are saved in the lexer result
-// and thus we can check before creating an indentation token that the last token
-// matched was a newline.
-const Newline = createToken({ name: 'Newline', pattern: /\n\r|\n|\r/, group: 'nl' });
-const Spaces = createToken({ name: 'Spaces', pattern: / +/, group: chevrotain.Lexer.SKIPPED });
-
-const matchIndent = (...args) => (patterns.matchIndent.call(context, ...args));
-const matchOutdent = (...args) => (patterns.matchOutdent.call(context, ...args));
-
-// define the indentation tokens using custom token patterns
-const Indent = createToken({ name: 'Indent', pattern: matchIndent });
-const Outdent = createToken({ name: 'Outdent', pattern: matchOutdent });
-
-// const Whitespace = createToken({
-  // name: 'Whitespace',
-  // pattern: /\s+/,
-  // // pattern: /[\r\n\t\f\v]*/,
-  // group: chevrotain.Lexer.SKIPPED,
-// });
-//
 const Identifier = createToken({ name: 'Identifier', pattern: /\w+/ });
 const Integer = createToken({ name: 'Integer', pattern: /\d+/ });
 const Assign = createToken({ name: 'Assign', pattern: /:=/ });
@@ -61,15 +39,7 @@ const If = createToken({ name: 'If', pattern: /if/, parent: Keyword });
 const Then = createToken({ name: 'Then', pattern: /then/, parent: Keyword });
 const Else = createToken({ name: 'Else', pattern: /else/, parent: Keyword });
 
-const tokensArray = [
-  Newline,
-
-  // indentation tokens must appear before Spaces, otherwise all
-  // indentation will always be consumed as spaces.
-  // Outdent must appear before Indent for handling zero spaces outdents.
-  Outdent,
-  Indent,
-  Spaces,
+const mainArray = [
   Integer,
   Literal,
   Semicolon,
@@ -79,12 +49,12 @@ const tokensArray = [
   While, Do, If, Then, Else, Comment,
   Identifier, // identifier must appear after ALL keyword tokens
 ];
+const tokensArray = indent.tokens.concat(mainArray);
 const whileLexer = new chevrotain.Lexer(tokensArray);
 
 
 function tokenize(text) {
-  context.identStack = [0];
-  context.lastTextMatched = undefined;
+  indent.init();
 
   const lexResult = whileLexer.tokenize(text);
 

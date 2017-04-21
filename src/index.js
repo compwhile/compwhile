@@ -3,8 +3,9 @@ import parser from './parser';
 
 function hi() {
   debugger;
-  const parsingResult = parser(`read X X := Y
-  write Y`);
+  const parsingResult = parser(`read X
+  X := Y
+write Y`);
 
   console.log(JSON.stringify(parsingResult, null, 4)); // eslint-disable-line
 }

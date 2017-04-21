@@ -1,10 +1,8 @@
-/* eslint-disable no-unused-expressions */
+/* eslint-disable no-unused-expressions, no-console */
 import chevrotain from 'chevrotain';
 import lexer from './../lexer';
 
-debugger;
 const tokens = lexer.tokens;
-
 const Parser = chevrotain.Parser;
 
 function WhileParser(input) {
@@ -15,32 +13,117 @@ function WhileParser(input) {
 
   this.program = $.RULE('program', () => {
     $.SUBRULE($.readStatement);
+    console.log('Read Statement was consumed');
+    $.CONSUME(tokens.Indent);
     $.SUBRULE($.commandStatement);
+    console.log('Command Statement was consumed');
+    $.CONSUME(tokens.Outdent);
     $.SUBRULE($.writeStatement);
+    console.log('Write Statement was consumed');
   });
 
   this.readStatement = $.RULE('readStatement', () => {
     $.CONSUME(tokens.Read);
+    console.log('Read was consumed');
     $.CONSUME(tokens.Identifier).image;
   });
 
   this.writeStatement = $.RULE('writeStatement', () => {
     $.CONSUME(tokens.Write);
+    console.log('Write was consumed');
     $.CONSUME(tokens.Identifier).image;
   });
 
-  this.commandStatement = $.RULE('commandStatement', () => {
-    // $.CONSUME(tokens.Indent).image;
+  this.optional = $.RULE('optional', () => {
+    $.CONSUME(tokens.Semicolon);
+    $.SUBRULE($.commandStatement);
+  });
 
+  this.indentOptional = $.RULE('indentOptional', () => {
+    $.CONSUME(tokens.Semicolon);
+    $.CONSUME(tokens.Outdent);
+    $.SUBRULE($.commandStatement);
+  });
+
+  this.commandStatement = $.RULE('commandStatement', () => {
     $.OR([
-      { ALT() { $.SUBRULE($.assignCommand); } },
+      {
+        ALT: () => {
+          $.SUBRULE1($.assignCommand);
+          $.OPTION1(() => {
+            $.SUBRULE2($.optional);
+          });
+        },
+      },
+      {
+        ALT: () => {
+          $.SUBRULE3($.whileCommand);
+          $.OPTION2(() => {
+            $.SUBRULE4($.indentOptional);
+          });
+        },
+      },
+      {
+        ALT: () => {
+          $.SUBRULE($.ifElseCommand);
+          $.OPTION3(() => {
+            $.SUBRULE5($.indentOptional);
+          });
+        },
+      },
     ]);
   });
+
+  /*
+  this.commandStatement = $.RULE('commandStatement', () => {
+    $.OR([
+      { ALT() { $.SUBRULE($.assignCommand); } },
+      { ALT() { $.SUBRULE($.whileCommand); } },
+      { ALT() { $.SUBRULE($.ifElseCommand); } },
+      { ALT() { $.SUBRULE($.sequentialCommand); } },
+    ]);
+  });
+  */
 
   this.assignCommand = $.RULE('assignCommand', () => {
     $.CONSUME(tokens.Identifier);
     $.CONSUME(tokens.Assign);
     $.CONSUME2(tokens.Identifier);
+  });
+
+  this.condition = $.RULE('condition', () => {
+    $.CONSUME(tokens.LParen);
+    $.SUBRULE($.expression);
+    $.CONSUME(tokens.RParen);
+  });
+
+  this.expression = $.RULE('expression', () => {
+    $.CONSUME(tokens.Identifier);
+  });
+
+  this.ifElseCommand = $.RULE('ifElseCommand', () => {
+    $.CONSUME(tokens.If);
+    $.SUBRULE($.condition);
+    $.CONSUME(tokens.Indent);
+    $.SUBRULE($.commandStatement);
+    $.CONSUME(tokens.Outdent);
+    $.CONSUME(tokens.Else);
+    $.CONSUME2(tokens.Indent);
+    $.SUBRULE2($.commandStatement);
+  });
+
+  this.whileCommand = $.RULE('whileCommand', () => {
+    $.CONSUME(tokens.While);
+    $.SUBRULE($.condition);
+    $.CONSUME(tokens.Do);
+    $.CONSUME(tokens.Indent);
+    $.SUBRULE($.commandStatement);
+  });
+
+  this.sequentialCommand = $.RULE('sequentialCommand', () => {
+    $.SUBRULE($.commandStatement);
+    $.CONSUME(tokens.Semicolon);
+    $.SUBRULE2($.commandStatement);
   });
 
   // very important to call this after all the rules have been defined.
@@ -55,21 +138,21 @@ WhileParser.prototype.constructor = WhileParser;
 const parser = new WhileParser();
 
 function parse(text) {
-  const lexingResult = lexer.tokenize(text);
+  const lexResult = lexer.tokenize(text);
 
-  if (lexingResult.errors.length > 0) {
-    return { lexErrors: lexingResult.errors };
+  if (lexResult.errors.length > 0) {
+    return { lexErrors: lexResult.errors };
   }
 
-  parser.input = lexingResult.tokens;
+  parser.input = lexResult.tokens;
   parser.program();
 
   if (parser.errors.length > 0) {
     return { errors: parser.errors };
   }
 
-  return { result: 'SUCCESS' };
+  return { result: 'SUCCESS', lexResult };
 }
 
 export default parse;
-/* eslint-enable no-unused-expressions */
+/* eslint-enable no-unused-expressions, no-console */
