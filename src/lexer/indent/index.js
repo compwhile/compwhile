@@ -16,7 +16,7 @@ function init() {
 function logCreator(printedOffsets) {
   return function log(offset, msg) {
     if (printedOffsets.indexOf(offset) > -1) {
-      console.log(msg);
+      // console.log(msg);
     }
   };
 }

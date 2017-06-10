@@ -8,58 +8,104 @@ const Parser = chevrotain.Parser;
 function WhileParser(input) {
   // By default if {recoveryEnabled: true} is not passed in the config object
   // error recovery / fault tolerance capabilities will be disabled
-  Parser.call(this, input, lexer.tokensArray);
+  Parser.call(this, input, lexer.tokensArray, {
+    maxLookahead: 100,
+    ignoredIssues: { commandStatement: { OR: true } },
+  });
   const $ = this;
 
   this.program = $.RULE('program', () => {
     $.SUBRULE($.readStatement);
-    console.log('Read Statement was consumed');
     $.CONSUME(tokens.Indent);
     $.SUBRULE($.commandStatement);
-    console.log('Command Statement was consumed');
     $.CONSUME(tokens.Outdent);
     $.SUBRULE($.writeStatement);
-    console.log('Write Statement was consumed');
   });
 
   this.readStatement = $.RULE('readStatement', () => {
     $.CONSUME(tokens.Read);
-    console.log('Read was consumed');
     $.CONSUME(tokens.Identifier).image;
   });
 
   this.writeStatement = $.RULE('writeStatement', () => {
     $.CONSUME(tokens.Write);
-    console.log('Write was consumed');
     $.CONSUME(tokens.Identifier).image;
-  });
-
-  this.optional = $.RULE('optional', () => {
-    $.CONSUME(tokens.Semicolon);
-    $.SUBRULE($.commandStatement);
-  });
-
-  this.indentOptional = $.RULE('indentOptional', () => {
-    $.CONSUME(tokens.Semicolon);
-    $.CONSUME(tokens.Outdent);
-    $.SUBRULE($.commandStatement);
   });
 
   this.commandStatement = $.RULE('commandStatement', () => {
     $.OR([
+      { ALT() { $.SUBRULE($.assignCommand); } },
+      { ALT() { $.SUBRULE($.whileCommand); } },
+      { ALT() { $.SUBRULE($.ifElseCommand); } },
+      { ALT() { $.SUBRULE($.sequentialCommand); } },
+    ]);
+  });
+
+  this.sequentialCommand = $.RULE('sequentialCommand', () => {
+    $.OR([
+      { ALT() { $.SUBRULE($.assignCommand); } },
+      { ALT() { $.SUBRULE($.whileCommand); } },
+      { ALT() { $.SUBRULE($.ifElseCommand); } },
+    ]);
+    $.CONSUME(tokens.Semicolon);
+    $.SUBRULE($.commandStatement);
+  });
+
+  /*
+  this.indentOptional = $.RULE('indentOptional', (isInBlock) => {
+    $.CONSUME(tokens.Semicolon);
+    $.CONSUME(tokens.Outdent);
+    $.SUBRULE($.commandStatement, [isInBlock]);
+
+    if (isInBlock) {
+      $.CONSUME2(tokens.Outdent);
+    }
+  });
+
+  this.optional = $.RULE('optional', (isInBlock) => {
+    $.CONSUME(tokens.Semicolon);
+    $.SUBRULE($.commandStatement, [isInBlock]);
+  });
+
+  this.commandStatement = $.RULE('commandStatement', (isInBlock) => {
+    $.OR1([
       {
         ALT: () => {
           $.SUBRULE1($.assignCommand);
-          $.OPTION1(() => {
-            $.SUBRULE2($.optional);
-          });
+          $.OR2([
+            {
+              GATE: () => isInBlock,
+              ALT: () => {
+                $.OR3([
+                  {
+                    ALT: () => {
+                      $.SUBRULE1($.optional, [isInBlock]);
+                    },
+                  },
+                  {
+                    ALT: () => {
+                      $.SUBRULE1($.indentOptional, [isInBlock]);
+                    },
+                  },
+                ]);
+              },
+            },
+            {
+              GATE: () => !isInBlock,
+              ALT: () => {
+                $.OPTION1(() => {
+                  $.SUBRULE2($.optional, [isInBlock]);
+                });
+              },
+            },
+          ]);
         },
       },
       {
         ALT: () => {
           $.SUBRULE3($.whileCommand);
           $.OPTION2(() => {
-            $.SUBRULE4($.indentOptional);
+            $.SUBRULE2($.indentOptional);
           });
         },
       },
@@ -67,20 +113,10 @@ function WhileParser(input) {
         ALT: () => {
           $.SUBRULE($.ifElseCommand);
           $.OPTION3(() => {
-            $.SUBRULE5($.indentOptional);
+            $.SUBRULE3($.indentOptional);
           });
         },
       },
-    ]);
-  });
-
-  /*
-  this.commandStatement = $.RULE('commandStatement', () => {
-    $.OR([
-      { ALT() { $.SUBRULE($.assignCommand); } },
-      { ALT() { $.SUBRULE($.whileCommand); } },
-      { ALT() { $.SUBRULE($.ifElseCommand); } },
-      { ALT() { $.SUBRULE($.sequentialCommand); } },
     ]);
   });
   */
@@ -117,13 +153,8 @@ function WhileParser(input) {
     $.SUBRULE($.condition);
     $.CONSUME(tokens.Do);
     $.CONSUME(tokens.Indent);
-    $.SUBRULE($.commandStatement);
-  });
-
-  this.sequentialCommand = $.RULE('sequentialCommand', () => {
-    $.SUBRULE($.commandStatement);
-    $.CONSUME(tokens.Semicolon);
-    $.SUBRULE2($.commandStatement);
+    $.SUBRULE($.commandStatement, [true]);
+    $.CONSUME(tokens.Outdent);
   });
 
   // very important to call this after all the rules have been defined.

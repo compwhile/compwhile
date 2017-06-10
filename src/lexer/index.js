@@ -1,7 +1,18 @@
 import chevrotain from 'chevrotain';
+
 import indent from './indent';
 
 const createToken = chevrotain.createToken;
+
+/*
+ * newlines are not skipped, by setting their group to "nl" they are saved in the lexer result
+ * and thus we can check before creating an indentation token that the last token
+ * matched was a newline.
+*/
+/*
+const Newline = createToken({ name: 'Newline', pattern: /\n\r|\n|\r/ });
+const Spaces = createToken({ name: 'Spaces', pattern: / +/, group: chevrotain.Lexer.SKIPPED });
+*/
 
 const Identifier = createToken({ name: 'Identifier', pattern: /\w+/ });
 const Integer = createToken({ name: 'Integer', pattern: /\d+/ });
@@ -9,6 +20,9 @@ const Assign = createToken({ name: 'Assign', pattern: /:=/ });
 const Semicolon = createToken({ name: 'Semicolon', pattern: /;/ });
 const LParen = createToken({ name: 'LParen', pattern: /\(/ });
 const RParen = createToken({ name: 'RParen', pattern: /\)/ });
+const LBracket = createToken({ name: 'LBracket', pattern: /\{/ });
+const RBracket = createToken({ name: 'RBracket', pattern: /\}/ });
+
 const Comment = createToken({
   name: 'Comment',
   pattern: /#.+/,
@@ -39,19 +53,18 @@ const If = createToken({ name: 'If', pattern: /if/, parent: Keyword });
 const Then = createToken({ name: 'Then', pattern: /then/, parent: Keyword });
 const Else = createToken({ name: 'Else', pattern: /else/, parent: Keyword });
 
-const mainArray = [
+const tokensArray = indent.tokens.concat([
   Integer,
   Literal,
   Semicolon,
   LParen, RParen,
+  LBracket, RBracket,
   Assign,
   Keyword, Read, Write, Hd, Tl, Cons, // keywords
   While, Do, If, Then, Else, Comment,
   Identifier, // identifier must appear after ALL keyword tokens
-];
-const tokensArray = indent.tokens.concat(mainArray);
+]);
 const whileLexer = new chevrotain.Lexer(tokensArray);
-
 
 function tokenize(text) {
   indent.init();

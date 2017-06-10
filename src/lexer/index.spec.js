@@ -73,65 +73,56 @@ write Z`;
     it('should return valid tokens for token 1: INPUT', () =>
       validateToken(1, 'INPUT', tokenTypes.Identifier));
 
-    it('should return valid tokens for token 2: Indent', () =>
-      validateToken(2, '  ', tokenTypes.Indent));
+    it('should return valid tokens for token 2: X', () =>
+      validateToken(2, 'X', tokenTypes.Identifier));
 
-    it('should return valid tokens for token 3: X', () =>
-      validateToken(3, 'X', tokenTypes.Identifier));
+    it('should return valid tokens for token 3: :=', () =>
+      validateToken(3, ':=', tokenTypes.Assign));
 
-    it('should return valid tokens for token 4: :=', () =>
-      validateToken(4, ':=', tokenTypes.Assign));
+    it('should return valid tokens for token 4: hd', () =>
+      validateToken(4, 'hd', tokenTypes.Hd));
 
-    it('should return valid tokens for token 5: hd', () =>
-      validateToken(5, 'hd', tokenTypes.Hd));
+    it('should return valid tokens for token 5: INPUT', () =>
+      validateToken(5, 'INPUT', tokenTypes.Identifier));
 
-    it('should return valid tokens for token 6: INPUT', () =>
-      validateToken(6, 'INPUT', tokenTypes.Identifier));
+    it('should return valid tokens for token 6: ;', () =>
+      validateToken(6, ';', tokenTypes.Semicolon));
 
-    it('should return valid tokens for token 7: ;', () =>
-      validateToken(7, ';', tokenTypes.Semicolon));
+    it('should return valid tokens for token 7: Y', () =>
+      validateToken(7, 'Y', tokenTypes.Identifier));
 
-    it('should return valid tokens for token 8: Outdent', () =>
-      validateToken(8, '', tokenTypes.Outdent));
+    it('should return valid tokens for token 8: :=', () =>
+      validateToken(8, ':=', tokenTypes.Assign));
 
-    it('should return valid tokens for token 8: Y', () =>
-      validateToken(8, 'Y', tokenTypes.Identifier));
+    it('should return valid tokens for token 9: tl', () =>
+      validateToken(9, 'tl', tokenTypes.Tl));
 
-    it('should return valid tokens for token 9: :=', () =>
-      validateToken(9, ':=', tokenTypes.Assign));
+    it('should return valid tokens for token 10: INPUT', () =>
+      validateToken(10, 'INPUT', tokenTypes.Identifier));
 
-    it('should return valid tokens for token 10: tl', () =>
-      validateToken(10, 'tl', tokenTypes.Tl));
+    it('should return valid tokens for token 11: ;', () =>
+      validateToken(11, ';', tokenTypes.Semicolon));
 
-    it('should return valid tokens for token 11: INPUT', () =>
-      validateToken(11, 'INPUT', tokenTypes.Identifier));
+    it('should return valid tokens for token 12: Z', () =>
+      validateToken(12, 'Z', tokenTypes.Identifier));
 
-    it('should return valid tokens for token 12: ;', () =>
-      validateToken(12, ';', tokenTypes.Semicolon));
+    it('should return valid tokens for token 13: :=', () =>
+      validateToken(13, ':=', tokenTypes.Assign));
 
-    it('should return valid tokens for token 13: Z', () =>
-      validateToken(13, 'Z', tokenTypes.Identifier));
+    it('should return valid tokens for token 14: cons', () =>
+      validateToken(14, 'cons', tokenTypes.Cons));
 
-    it('should return valid tokens for token 14: :=', () =>
-      validateToken(14, ':=', tokenTypes.Assign));
+    it('should return valid tokens for token 15: Y', () =>
+      validateToken(15, 'Y', tokenTypes.Identifier));
 
-    it('should return valid tokens for token 15: cons', () =>
-      validateToken(15, 'cons', tokenTypes.Cons));
+    it('should return valid tokens for token 16: X', () =>
+      validateToken(16, 'X', tokenTypes.Identifier));
 
-    it('should return valid tokens for token 16: Y', () =>
-      validateToken(16, 'Y', tokenTypes.Identifier));
+    it('should return valid tokens for token 17: write', () =>
+      validateToken(17, 'write', tokenTypes.Write));
 
-    it('should return valid tokens for token 17: X', () =>
-      validateToken(17, 'X', tokenTypes.Identifier));
-
-    it('should return valid tokens for token 18: outdent', () =>
-      validateToken(18, '', tokenTypes.Outdent));
-
-    it('should return valid tokens for token 19: write', () =>
-      validateToken(19, 'write', tokenTypes.Write));
-
-    it('should return valid tokens for token 20: Z', () =>
-      validateToken(20, 'Z', tokenTypes.Identifier));
+    it('should return valid tokens for token 18: Z', () =>
+      validateToken(18, 'Z', tokenTypes.Identifier));
   });
 
   describe('Lexer - comments', () => {

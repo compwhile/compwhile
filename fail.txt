@@ -1,0 +1,14 @@
+// while followed by assignment (P10)
+read X
+  while (X) do
+    X := Y;
+  Y := X
+write Y
+
+// while followed by assignment (P11)
+read X
+  while (X) do
+    X := Y;
+    Y := X;
+  X := Y
+write Y
